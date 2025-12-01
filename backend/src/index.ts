@@ -1,15 +1,19 @@
-import { Request, Response, NextFunction } from 'express';
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
+import candidateRoutes from './routes/candidateRoutes';
+import prisma from './prisma';
 
 dotenv.config();
-const prisma = new PrismaClient();
 
 export const app = express();
-export default prisma;
-
 const port = 3010;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+app.use('/api/candidates', candidateRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hola LTI!');
@@ -17,7 +21,7 @@ app.get('/', (req, res) => {
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.type('text/plain'); 
+  res.type('text/plain');
   res.status(500).send('Something broke!');
 });
 
