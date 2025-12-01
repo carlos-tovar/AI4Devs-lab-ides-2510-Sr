@@ -41,6 +41,6 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-router.post('/', upload.single('cv'), createCandidate);
+router.post('/', upload.single('cv') as any, createCandidate);
 
 export default router;

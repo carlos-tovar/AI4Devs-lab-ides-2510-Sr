@@ -30,17 +30,20 @@ const AddCandidateForm: React.FC = () => {
         setLoading(true);
         setMessage(null);
 
-        if (!cvFile) {
-            setMessage({ type: 'error', text: 'Please upload a CV.' });
-            setLoading(false);
-            return;
-        }
+        // File is now optional
+        // if (!cvFile) {
+        //     setMessage({ type: 'error', text: 'Please upload a CV.' });
+        //     setLoading(false);
+        //     return;
+        // }
 
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
             data.append(key, value);
         });
-        data.append('cv', cvFile);
+        if (cvFile) {
+            data.append('cv', cvFile);
+        }
 
         try {
             const response = await fetch('http://localhost:3010/api/candidates', {
@@ -62,11 +65,19 @@ const AddCandidateForm: React.FC = () => {
                 setCvFile(null);
                 // Reset file input manually if needed
             } else {
-                const errorData = await response.json();
-                setMessage({ type: 'error', text: errorData.error || 'Failed to add candidate.' });
+                let errorMessage = 'Failed to add candidate.';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorMessage;
+                } catch (e) {
+                    console.error('Failed to parse error response:', e);
+                    errorMessage = `Server Error: ${response.status} ${response.statusText}`;
+                }
+                setMessage({ type: 'error', text: errorMessage });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'Network error. Please try again.' });
+            console.error('Submission error:', error);
+            setMessage({ type: 'error', text: 'Network error. Check console for details.' });
         } finally {
             setLoading(false);
         }
@@ -158,12 +169,11 @@ const AddCandidateForm: React.FC = () => {
                     />
                 </div>
                 <div style={{ marginBottom: '15px' }}>
-                    <label>CV (PDF/DOCX) *</label>
+                    <label>CV (PDF/DOCX)</label>
                     <input
                         type="file"
                         accept=".pdf,.docx,.doc"
                         onChange={handleFileChange}
-                        required
                         style={{ width: '100%', padding: '8px' }}
                     />
                 </div>

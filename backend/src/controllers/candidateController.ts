@@ -11,10 +11,6 @@ export const createCandidate = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing required fields: firstName, lastName, email' });
         }
 
-        if (!file) {
-            return res.status(400).json({ error: 'CV file is required' });
-        }
-
         // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -39,7 +35,7 @@ export const createCandidate = async (req: Request, res: Response) => {
                 address,
                 education,
                 workExperience,
-                cvFilePath: file.path,
+                cvFilePath: file ? file.path : undefined, // Use undefined instead of null for optional fields if Prisma expects it, or ensure schema allows null
             },
         });
 

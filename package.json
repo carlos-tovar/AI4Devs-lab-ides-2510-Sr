@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "dev": "echo 'Please run start:backend and start:frontend in separate terminals'"
+  },
   "dependencies": {
     "multer": "^2.0.2"
   },

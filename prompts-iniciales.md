@@ -32,6 +32,9 @@ El objetivo era implementar la historia de usuario "Añadir Candidato al Sistema
 - **`src/components/AddCandidateForm.tsx`**: Creado formulario completo con validación y subida de archivos.
 - **`src/App.tsx`**: Añadido botón y renderizado condicional del formulario.
 
+### Cambios Adicionales
+- **CV Opcional**: Se modificó el esquema, controlador y formulario para permitir crear candidatos sin subir archivo CV.
+
 ### Notas Importantes
 - **Dependencias**: Se intentó instalar `multer` y `@types/multer` pero hubo problemas con el entorno de ejecución (`npm not found`). Es necesario ejecutar `npm install` en backend y frontend.
 - **Migración**: La migración de base de datos no se pudo ejecutar automáticamente por los mismos problemas de entorno. Se debe ejecutar `npx prisma migrate dev --name init_candidate` en la carpeta `backend`.
